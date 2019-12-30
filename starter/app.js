@@ -9,17 +9,32 @@ GAME RULES:
 
 */
 
-var scores, roundScore, activePlayer, dice, diceImages;
+var scores, roundScore, activePlayer, diceImages;
 
 scores = [0,0];
 roundScore = 0;
 activePlayer = 0;
 
-dice = Math.floor(Math.random() * 6) + 1;
-console.log("dice value = " + dice);
-diceImages = ['dice-1.png', 'dice-2.png', 'dice-3.png', 'dice-4.png', 'dice-5.png', 'dice-6.png'];
 
-document.querySelector('#current-' + activePlayer).textContent = dice;
+//console.log("dice value = " + dice);
+//diceImages = ['dice-1.png', 'dice-2.png', 'dice-3.png', 'dice-4.png', 'dice-5.png', 'dice-6.png'];
+
+
 
 document.querySelector('.dice').style.display = 'none';
     //'<img src=' + diceImages[dice - 1] + ' alt="Dice" class="dice">';
+
+document.getElementById('score-0').textContent = 0;
+document.getElementById('score-1').textContent = 0;
+document.getElementById('current-0').textContent = 0;
+document.getElementById('current-1').textContent = 0;
+
+document.querySelector('.btn-roll').addEventListener('click', function() {
+    var dice = Math.floor(Math.random() * 6) + 1;
+    
+    var diceDOM = document.querySelector('.dice');
+    diceDOM.style.display = 'block';
+    diceDOM.src = 'dice-' + dice + '.png';
+
+    document.querySelector('#current-' + activePlayer).textContent = dice;
+});
