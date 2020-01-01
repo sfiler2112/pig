@@ -9,25 +9,32 @@ GAME RULES:
 
 */
 
-var scores, roundScore, activePlayer, diceImages;
-
-scores = [0, 0];
-roundScore = 0;
-activePlayer = 0;
+var scores, roundScore, activePlayer, diceImages, gamePlaying;
 
 
-//console.log("dice value = " + dice);
-//diceImages = ['dice-1.png', 'dice-2.png', 'dice-3.png', 'dice-4.png', 'dice-5.png', 'dice-6.png'];
+function startNewGame() {
+    scores = [0, 0];
+    roundScore = 0;
+    activePlayer = 0;
+    gamePlaying = true;
 
+    document.querySelector('.dice').style.display = 'none';
 
-
-document.querySelector('.dice').style.display = 'none';
-    //'<img src=' + diceImages[dice - 1] + ' alt="Dice" class="dice">';
-
-document.getElementById('score-0').textContent = 0;
-document.getElementById('score-1').textContent = 0;
-document.getElementById('current-0').textContent = 0;
-document.getElementById('current-1').textContent = 0;
+    document.getElementById('score-0').textContent = 0;
+    document.getElementById('score-1').textContent = 0;
+    document.getElementById('current-0').textContent = 0;
+    document.getElementById('current-1').textContent = 0;
+    
+    document.getElementById('name-0').textContent = 'Player 1';
+    document.getElementById('name-1').textContent = 'Player 2';
+    
+    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('winner');
+    document.querySelector('.player-0-panel').classList.remove('active');
+    document.querySelector('.player-1-panel').classList.remove('active');
+    
+    document.querySelector('.player-0-panel').classList.add('active');
+}
 
 function switchActivePlayer() {
     document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('active');
@@ -43,41 +50,46 @@ function switchActivePlayer() {
 }
 
 document.querySelector('.btn-roll').addEventListener('click', function () {
-    var dice, diceDOM;
+    if (gamePlaying) {
+        var dice, diceDOM;
     
-    dice = Math.floor(Math.random() * 6) + 1;
-    
-    diceDOM = document.querySelector('.dice');
-    diceDOM.style.display = 'block';
-    diceDOM.src = 'dice-' + dice + '.png';
+        dice = Math.floor(Math.random() * 6) + 1;
 
-    if (dice !== 1) {
-        roundScore += dice;
-        document.querySelector('#current-' + activePlayer).textContent = roundScore;
-    } else {
-        switchActivePlayer();
+        diceDOM = document.querySelector('.dice');
+        diceDOM.style.display = 'block';
+        diceDOM.src = 'dice-' + dice + '.png';
+
+        if (dice !== 1) {
+            roundScore += dice;
+            document.querySelector('#current-' + activePlayer).textContent = roundScore;
+        } else {
+            switchActivePlayer();
+        }
     }
-    
-    
 });
 
 document.querySelector('.btn-hold').addEventListener('click', function () {
-    // Add current score to global score
-    scores[activePlayer] += roundScore;
-    
-    
-    // Update the UI
-    document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
-    
-    
-    // Check if player has won game 
-    
-    if (scores[activePlayer] >= 10) {
-        document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('winner');
-        document.getElementById('name-' + activePlayer).textContent = 'Winner!';
-    } else {
-        switchActivePlayer();
+    if (gamePlaying) {
+        // Add current score to global score
+        scores[activePlayer] += roundScore;
+
+        // Update the UI
+        document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
+
+        // Check if player has won game 
+
+        if (scores[activePlayer] >= 10) {
+            document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+            document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+            document.getElementById('name-' + activePlayer).textContent = 'Winner!';
+            gamePlaying = false;
+        } else {
+            switchActivePlayer();
+        }
     }
-    
 });
+
+document.querySelector('.btn-new').addEventListener('click', startNewGame);
+
+startNewGame();
 
